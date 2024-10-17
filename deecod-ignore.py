@@ -150,3 +150,46 @@ plt.ylabel('Number of Images')
 plt.xticks(rotation=45)
 plt.show()
 # -------------------------------------------------------------------------------------------------
+
+
+# Step 1: Calculate the target number of images for each class (equal to the maximum class size)
+max_class_size = max(train_counts.values())
+print(f"Maximum class size: {max_class_size}")
+
+# Step 2: Function to oversample a class by augmenting images
+def oversample_class(images, target_size):
+    augmented_images = []
+    while len(images) + len(augmented_images) < target_size:
+        # Augment the images to reach the target size
+        image = random.choice(images)  # Randomly pick an image from the class
+        augmented_image = augment_image(image)  # Augment the selected image
+        augmented_images.append(augmented_image)
+    return images + augmented_images
+
+# Step 3: Oversample each class in the train_images dictionary
+for class_name, images in train_images.items():
+    if len(images) < max_class_size:
+        # If the class has fewer images than the max_class_size, oversample it
+        train_images[class_name] = oversample_class(images, max_class_size)
+    print(f"Oversampled class {class_name} to {len(train_images[class_name])} images")
+
+# Step 4: Recalculate the number of images in each class after oversampling
+train_counts = {class_name: len(images) for class_name, images in train_images.items()}
+
+# Create a DataFrame for easy plotting
+counts_df_balanced = pd.DataFrame({
+    'Class': list(train_counts.keys()),
+    'Train': list(train_counts.values()),
+    'Test': [test_counts.get(class_name, 0) for class_name in train_counts.keys()]
+})
+
+# Plot the new balanced class distribution
+counts_df_balanced.plot(x='Class', kind='bar', figsize=(12, 6))
+plt.title('Balanced Number of Images per Class in Train and Test Datasets')
+plt.xlabel('Class')
+plt.ylabel('Number of Images')
+plt.xticks(rotation=45)
+plt.show()
+
+
+# USE THE TEST_IMAGES AND THE TRAIN_IMAGES THEY HAVE BEEN BALANCED
