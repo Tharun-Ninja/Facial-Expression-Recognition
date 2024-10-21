@@ -130,11 +130,11 @@ def compare_classifiers_with_dimension_reduction(train_images, test_images):
 
 
 # Define paths to the train and test directories
-# train_dir = 'Dataset/Train'
-# test_dir = 'Dataset/Test'
+train_dir = 'Dataset/Train'
+test_dir = 'Dataset/Test'
 
-train_dir = 'train'
-test_dir = 'test'
+# train_dir = 'train'
+# test_dir = 'test'
 
 # Check if the directories exist
 if not os.path.exists(train_dir):
